@@ -1,0 +1,25 @@
+{
+  "name": "sistemas_distribuidos_balanceador",
+  "version": "1.0.0",
+  "description": "creacion el balanceador de cargas",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kg-fs/sistemas_distribuidos_balanceador.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kg-fs/sistemas_distribuidos_balanceador/issues"
+  },
+  "homepage": "https://github.com/kg-fs/sistemas_distribuidos_balanceador#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "node-fetch": "^3.3.2"
+  }
+}
