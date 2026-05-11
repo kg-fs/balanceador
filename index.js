@@ -19,7 +19,6 @@ let current = 0;
 
 // ==================== MIDDLEWARE ====================
 
-// IMPORTANTE: usar JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -30,6 +29,7 @@ app.set("trust proxy", 1);
 app.use(async (req, res) => {
 
   const server = servers[current];
+
   current = (current + 1) % servers.length;
 
   const targetUrl = server.url + req.originalUrl;
@@ -42,8 +42,6 @@ app.use(async (req, res) => {
       method: req.method,
 
       headers: {
-        ...req.headers,
-        host: undefined,
         "Content-Type": "application/json"
       },
 
@@ -56,7 +54,8 @@ app.use(async (req, res) => {
 
     res.status(response.status);
 
-    // copiar headers
+    // ==================== COPIAR HEADERS ====================
+
     response.headers.forEach((value, key) => {
 
       const lowerKey = key.toLowerCase();
@@ -74,18 +73,20 @@ app.use(async (req, res) => {
 
     });
 
+    // ==================== RESPUESTA ====================
+
     const data = await response.arrayBuffer();
 
-    let bodyText = Buffer.from(data).toString();
+    const bodyText = Buffer.from(data).toString();
 
     const contentType = response.headers.get("content-type") || "";
 
-    // si es json agregar info del balanceador
+    // Si es JSON agregar info del balanceador
     if (contentType.includes("application/json")) {
 
       try {
 
-        let jsonBody = JSON.parse(bodyText);
+        const jsonBody = JSON.parse(bodyText);
 
         jsonBody.balancer_info = {
           used_server: server.name,
@@ -96,8 +97,11 @@ app.use(async (req, res) => {
         return res.json(jsonBody);
 
       } catch (e) {
+
         console.log("No se pudo parsear JSON");
+
       }
+
     }
 
     res.send(bodyText);
